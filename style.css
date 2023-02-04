@@ -1,0 +1,13 @@
+:root
+{
+    --dark_square_color: #4b9e4b;
+    --light_square_color: #CCFFCC;
+    --selected_square_color: #4bbe4b;
+    --tile-size: 64px;
+    --bg-color: #212121;
+}
+
+body
+{
+    background-color: var(--bg-color);
+}

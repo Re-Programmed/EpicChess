@@ -1,0 +1,52 @@
+.menu_option
+{
+    background-color: var(--dark_square_color);
+    width: 184px;
+    height: 184px;
+
+    padding: 15px;
+
+    border: 4px solid #3b7a3b;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-out;
+}
+
+.menu_option:hover
+{
+    background-color: #3b7a3b;
+
+    border: 4px solid #2f5f2f;
+}
+
+.random_piece, .piece_listing_img
+{
+    background-size: contain;
+    width: 100px;
+    height: 100px;
+    display: block;
+    background-repeat: no-repeat;
+    margin-left: 0.67em;
+    margin-top: 0.67em;
+}
+
+h1, h3{
+    font-family: monospace;
+    color: #DDDDDD;
+}
+
+.display_tile
+{
+    width: calc(var(--tile-size) * 2);
+    height: calc(var(--tile-size) * 2);
+    display: inline-block;
+    margin: 0;
+    margin-top: -4px;
+
+    animation-name: tile_fadeup;
+    animation-duration: 1.5s;
+    animation-fill-mode: both;
+}
+
+div{
+    image-rendering: pixelated;
+}

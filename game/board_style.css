@@ -1,0 +1,70 @@
+
+.tile
+{
+    width: var(--tile-size);
+    height: var(--tile-size);
+    display: inline-block;
+    margin: 0;
+    margin-top: -4px;
+
+    animation-name: tile_fadeup;
+    animation-duration: 1.5s;
+    animation-fill-mode: both;
+}
+
+@keyframes tile_fadeup
+{
+   from{background-color: #CCFFCC00;}
+   to{}
+}
+
+.dark_square
+{
+    background-color: var(--dark_square_color);
+}
+
+.light_square
+{
+    background-color: var(--light_square_color);
+}
+
+.wall_square
+{
+    background-color: var(--bg-color);
+}
+
+
+.capture_cirle
+{
+    margin-top: -64px;
+}
+
+.piece
+{
+    width: var(--tile-size);
+    height: var(--tile-size);
+
+    background-size: var(--tile-size);
+    
+    animation-name: piece_fadeup;
+    animation-duration: .7s;
+    animation-fill-mode: both;
+}
+
+@keyframes piece_fadeup {
+    from{transform: scale(0);}
+    to{}
+}
+
+.fade_piece
+{
+    animation-name: piece_fadeout;
+    animation-duration: 0.5s;
+    animation-fill-mode: both;
+}
+
+@keyframes piece_fadeout
+{
+    from{}
+    to{transform: scale(0);}    
+}
