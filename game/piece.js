@@ -55,6 +55,7 @@ class Piece
 
 function LoadCustomPieceFromData(piece, piece_data, gen_locations = false)
 {
+    console.log("ADDED NEW PIECE")
         const pt_w = parseInt(piece_data.id + "1");
         const pt_b = parseInt(piece_data.id + "2");
 

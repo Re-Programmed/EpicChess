@@ -17,27 +17,164 @@ var move_pieces = [];
 
 var en_passant_allowed = undefined
 
+//create randomized access code for colors that is checked against api
+//create randomized access code for colors that is checked against api
 window.addEventListener("load", function () {
     const urlParams = new URLSearchParams(window.location.search);
     const color = urlParams.get('color');
+    const gameid = urlParams.get('game');
 
     client_player = color;
 
-    api.getChessBoard("t_board_1675540090792")
+    api.gameID = gameid;
+
+    api.getChessBoard(gameid)
     .then(res => {
-        current_board = res;
+        last_gotten_board = res;
 
-        tile_dark_color = res.bd;
-        tile_light_color = res.bl;
+        //Check if access is allowed
+         
+        var gid = this.localStorage.getItem("client_epic_chess_" + gameid)
+        console.log("GID: " + gid);
 
-        GenerateDefaultPieces();
+        if(gid == undefined)
+        {
+            if(res.c_prot.w_c && res.c_prot.b_c)
+            {
+                var dbel = this.document.createElement("p");
+                dbel.textContent = "Made you spectator"
+                document.body.appendChild(dbel)
 
-        GenerateBoard();
-    
-        //PlaceDefaultPieces();
-        GenerateBoardFromData();
+                client_player = 'S'
+                current_turn_data.player = 'S'
+            }else if(res.c_prot.w_c)
+            {
+                if(!res.c_prot.b_c)
+                {
+                    var dbel = this.document.createElement("p");
+                    dbel.textContent = "Made you black player"
+                    document.body.appendChild(dbel)
+
+                    client_player = 'B'
+                    current_turn_data.player = 'B'
+
+                    this.localStorage.setItem("client_epic_chess_" + gameid, res.c_prot.b_id);
+                }
+            }else if(res.c_prot.b_c)
+            {
+                if(!res.c_prot.w_c)
+                {
+                    var dbel = this.document.createElement("p");
+                    dbel.textContent = "Made you white player"
+                    document.body.appendChild(dbel)
+                    
+                    client_player = 'W'
+                    current_turn_data.player = 'W'
+
+                    this.localStorage.setItem("client_epic_chess_" + gameid, res.c_prot.w_id);
+                }
+            }else{
+                var dbel = this.document.createElement("p");
+                dbel.textContent = "Made you white player"
+                document.body.appendChild(dbel)
+
+                client_player = 'W'
+                current_turn_data.player = 'W'
+
+                this.localStorage.setItem("client_epic_chess_" + gameid, res.c_prot.w_id);
+            }
+
+           
+        }else{
+            if(color == 'W')
+            {
+                if(res.c_prot.w_c)
+                {
+                    if(gid != res.c_prot.w_id)
+                    {
+                        var dbel = this.document.createElement("p");
+                        dbel.textContent = "Access Denied (ID Does not match white game, and white has already connected)"
+                        document.body.appendChild(dbel)
+
+                        client_player = 'S'
+                        current_turn_data.player = 'S'
+                    }else{
+                        var dbel = this.document.createElement("p");
+                        dbel.textContent = "Access Granted"
+                        document.body.appendChild(dbel)
+                    }
+                }else{
+                    if(gid != res.c_prot.b_id)
+                    {
+                        var dbel = this.document.createElement("p");
+                        dbel.textContent = "Created you as white player"
+                        document.body.appendChild(dbel)
+                        client_player = 'W'
+                        current_turn_data.player = 'W'
+
+                        this.localStorage.setItem("client_epic_chess_" + gameid, res.c_prot.w_id);
+                    }else{
+                        var dbel = this.document.createElement("p");
+                        dbel.textContent = "Access Denied (Tried to join for white when id matched black player)"
+                        document.body.appendChild(dbel)
+                        client_player = 'S'
+                        current_turn_data.player = 'S'
+                    }
+                }
+            }else{
+                if(res.c_prot.b_c)
+                {
+                    if(gid != res.c_prot.b_id)
+                    {
+                        var dbel = this.document.createElement("p");
+                        dbel.textContent = "Access Denied (ID Does not match black game, and black has already connected)"
+                        document.body.appendChild(dbel)
+                        client_player = 'S'
+                        current_turn_data.player = 'S'
+                    }else{
+                        var dbel = this.document.createElement("p");
+                        dbel.textContent = "Access Granted"
+                        document.body.appendChild(dbel)
+                    }
+                }else{
+                    if(gid != res.c_prot.w_id)
+                    {
+                        var dbel = this.document.createElement("p");
+                        dbel.textContent = "Created you as black player"
+                        document.body.appendChild(dbel)
+                        client_player = 'B'
+                        current_turn_data.player = 'B'
+
+                        this.localStorage.setItem("client_epic_chess_" + gameid, res.c_prot.b_id);
+                    }else{
+                        var dbel = this.document.createElement("p");
+                        dbel.textContent = "Access Denied (Tried to join for black when id matched white player)"
+                        document.body.appendChild(dbel)
+                        client_player = 'S'
+                        current_turn_data.player = 'S'
+                    }
+                }
+            }
+        }
+
+        api.getChessBoard("t_board_" + res.b_load)
+        .then(res => {
+            current_board = res;
+
+            tile_dark_color = res.bd;
+            tile_light_color = res.bl;
+
+            GenerateDefaultPieces();
+
+            GenerateBoard();
+        
+            //PlaceDefaultPieces();
+            GenerateBoardFromData();
+        })
+
     })
 
+    
    
 
 

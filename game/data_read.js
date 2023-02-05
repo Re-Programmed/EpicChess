@@ -61,34 +61,53 @@ function SendBoardData()
         })
     })
 
-    api.setChessBoard({board: arr, player: current_turn_data.player, en_passant_allowed: en_passant_allowed != undefined, c_p: last_gotten_board.c_p});
+    var send = {board: arr, player: current_turn_data.player, en_passant_allowed: en_passant_allowed != undefined, c_p: last_gotten_board.c_p, b_load: current_board.id, c_prot: {b_c: true, w_c: true, b_id: last_gotten_board.c_prot.b_id, w_id: last_gotten_board.c_prot.w_id}}
+
+    last_gotten_board = send;
+
+    api.setChessBoard(send);
 }
 
 function RetrieveBoardData(load_custom_pos = false, first_fetch = false)
 {
-    api.getChessBoard()
-    .then(res => {
-        last_gotten_board = res;
+    api.getChessBoard().then(res => {
         const arr = res.board;
-
-        console.log(res);
-
-        res.c_p.forEach(cp => {
-            console.log(cp);
-            FetchCustomPiece(cp, load_custom_pos);
-        })
-
-        setTimeout(function () {
-            var x = 0;
-            var y = 0;
-            tiles.forEach(row => {
-                row.forEach(tile => {
-
-                    if(tile.piece != undefined)
-                    {
-                        if(arr[x + y * 8].t != undefined)
+    
+            console.log(res);
+    
+            if(first_fetch)
+            {
+                res.c_p.forEach(cp => {
+                    FetchCustomPiece(cp, load_custom_pos);
+                })
+            }
+    
+            setTimeout(function () {
+                var x = 0;
+                var y = 0;
+                tiles.forEach(row => {
+                    row.forEach(tile => {
+    
+                        if(tile.piece != undefined)
                         {
-                            if(arr[x + y * 8].t != tile.piece.piece_type)
+                            if(arr[x + y * 8].t != undefined)
+                            {
+                                if(arr[x + y * 8].t != tile.piece.piece_type)
+                                {
+                                    const p = arr[x + y * 8];
+                                    if(p.f != undefined)
+                                    {
+                                        tile.SetStartPiece(GetPiece(arr[x + y * 8].t));
+                                    }else{
+                                        tile.UpdatePiece(GetPiece(arr[x + y * 8].t));
+                                    }
+                                }
+                            }else{
+                                tile.RemovePiece();
+                            }
+                            
+                        }else{
+                            if(arr[x + y * 8].t != undefined)
                             {
                                 const p = arr[x + y * 8];
                                 if(p.f != undefined)
@@ -97,37 +116,24 @@ function RetrieveBoardData(load_custom_pos = false, first_fetch = false)
                                 }else{
                                     tile.UpdatePiece(GetPiece(arr[x + y * 8].t));
                                 }
-                            }
-                        }else{
-                            tile.RemovePiece();
-                        }
-                        
-                    }else{
-                        if(arr[x + y * 8].t != undefined)
-                        {
-                            const p = arr[x + y * 8];
-                            if(p.f != undefined)
-                            {
-                                tile.SetStartPiece(GetPiece(arr[x + y * 8].t));
-                            }else{
-                                tile.UpdatePiece(GetPiece(arr[x + y * 8].t));
-                            }
-                            if(res.en_passant_allowed)
-                            {
-                                en_passant_allowed = tile;
+                                if(res.en_passant_allowed)
+                                {
+                                    en_passant_allowed = tile;
+                                }
                             }
                         }
-                    }
-
-                    x++;
+    
+                        x++;
+                    })
+    
+                    y++;
+                    x = 0;
                 })
-
-                y++;
-                x = 0;
-            })
-        }, first_fetch ? 1500 : 0)
-
-        current_turn_data.player = res.player;
+            }, first_fetch ? 1500 : 0)
+    
+            current_turn_data.player = res.player;
     })
+    
+    
     
 }

@@ -27,15 +27,17 @@ class API
 
     async getChessBoard(id = null)
     {
+        console.log(encodeURI(this.url + (id == null ? this.gameID : id)))
         var result = await fetch(encodeURI(this.url + (id == null ? this.gameID : id)))
         var data = await result.json()
 
        return JSON.parse(atob(data.data));
     }
 
-    async setChessBoard(chess_board_data)
+    async setChessBoard(chess_board_data, temp_id = 0)
     {
-        var res = await fetch(encodeURI(this.postUrl + this.gameID + "&data=" + btoa(JSON.stringify(chess_board_data))))
+        console.log(encodeURI(this.postUrl + (temp_id == 0 ? this.gameID : temp_id) + "&data=" + btoa(JSON.stringify(chess_board_data))))
+        var res = await fetch(encodeURI(this.postUrl + (temp_id == 0 ? this.gameID : temp_id) + "&data=" + btoa(JSON.stringify(chess_board_data))))
 
         return res;
     }
@@ -43,6 +45,15 @@ class API
     async getValidPieces()
     {
         var res = await fetch(this.url + "validity_pieces")
+        
+        var data = await res.json();
+        
+        return JSON.parse(atob(data.data));
+    }
+
+    async getValidBoards()
+    {
+        var res = await fetch(this.url + "validity_boards")
         
         var data = await res.json();
         
