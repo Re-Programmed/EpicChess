@@ -25,17 +25,52 @@ function GenerateBoardFromData()
     */
 
     //SendBoardData();
+    IsInCheck();
 
     setInterval(function () {
         if(current_turn_data.player != client_player)
         {
             document.getElementsByTagName("title")[0].textContent = "Epic Chess"
             RetrieveBoardData();
+            been_our_turn = false;
         }else{
             document.getElementsByTagName("title")[0].textContent = "Your Turn! - Epic Chess"
+
+            if(!been_our_turn)
+            {
+                IsInCheck();
+
+                been_our_turn = true;
+            }
         }
     }, 5000)
 }
+
+function IsInCheck()
+{
+    tiles.forEach(row => {
+        row.forEach(tile => {
+            if(tile.piece != undefined)
+            {   
+                if(client_player == "B")
+                {
+                    if(tile.piece.piece_type == piece_type.B_king)
+                    {
+                        in_check = IsSquareAttacked(tile, "B");
+                    }
+                }else if(client_player == "W")
+                {
+                    if(tile.piece.piece_type == piece_type.W_king)
+                    {
+                        in_check = IsSquareAttacked(tile, "W");
+                    }
+                }
+            }
+        })
+    })
+}
+
+var been_our_turn = false;
 
 function SendBoardData()
 {

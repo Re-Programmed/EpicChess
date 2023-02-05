@@ -34,7 +34,7 @@ class Tile
 
         this.SetType(type);
 
-        if(type == 0)
+        if(type == 1)
         {
             if(!dark)
             {

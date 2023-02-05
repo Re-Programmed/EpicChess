@@ -1,3 +1,7 @@
+
+var in_check = false;
+var checking_pieces = []
+
 var current_turn_data = 
 {
     player: 'W',
@@ -17,8 +21,6 @@ var move_pieces = [];
 
 var en_passant_allowed = undefined
 
-//create randomized access code for colors that is checked against api
-//create randomized access code for colors that is checked against api
 window.addEventListener("load", function () {
     const urlParams = new URLSearchParams(window.location.search);
     const color = urlParams.get('color');
@@ -36,7 +38,7 @@ window.addEventListener("load", function () {
          
         var gid = this.localStorage.getItem("client_epic_chess_" + gameid)
         console.log("GID: " + gid);
-
+        /* ANTI CHEAT CLIENT CHECK
         if(gid == undefined)
         {
             if(res.c_prot.w_c && res.c_prot.b_c)
@@ -155,7 +157,7 @@ window.addEventListener("load", function () {
                     }
                 }
             }
-        }
+        }*/
 
         api.getChessBoard("t_board_" + res.b_load)
         .then(res => {
@@ -319,7 +321,7 @@ function SelectTile(tile)
             }
 
             tile_data.piece.motions.moveable_squares.forEach(move => {
-                AllowTileMove(GetTileByXY(tile_data.x + move.x, tile_data.y + move.y));
+                AllowTileMove(GetTileByXY(tile_data.x + move.x, tile_data.y + move.y), tile_data);
             })
 
             tile_data.piece.motions.piece_motion_rows?.forEach(row => {
@@ -334,7 +336,7 @@ function SelectTile(tile)
                             if(t.piece != undefined){finish_row = true;}
                             else
                             {
-                                AllowTileMove(t);
+                                AllowTileMove(t, tile_data);
                             }
                         }
                     }
@@ -370,7 +372,7 @@ function SelectTile(tile)
             if(tile.children[0].getAttribute(elements.a_first_turn) != undefined)
             {
                 tile_data.piece.motions.first_turn_squares.forEach(move => {
-                    AllowTileMove(GetTileByXY(tile_data.x + move.x, tile_data.y + move.y));
+                    AllowTileMove(GetTileByXY(tile_data.x + move.x, tile_data.y + move.y), tile_data);
                 })
 
                 tile_data.piece.motions.first_turn_rows?.forEach(row => {
@@ -385,7 +387,7 @@ function SelectTile(tile)
                                 if(t.piece != undefined && t.piece.piece_type != piece_type.move_square){finish_row = true;}
                                 else
                                 {
-                                    AllowTileMove(t);
+                                    AllowTileMove(t, tile_data);
                                 }
                             }
                         }
@@ -452,11 +454,57 @@ function AllowTileCapture(tile)
     }
 }
 
-function AllowTileMove(tile)
+function AllowTileMove(tile, og_tile)
 {
     if(tile == undefined){return;}
     if(tile.piece == undefined)
     {
+        if(og_tile.piece.piece_type == piece_type.B_king)
+        {
+            if(IsSquareAttacked(tile, "B"))
+            {
+                return;
+            }
+        }else if(og_tile.piece.piece_type == piece_type.W_king)
+        {
+            if(IsSquareAttacked(tile, "W"))
+            {
+                return;
+            }
+        }else{
+            if(in_check)
+            {
+                if(client_player == "B")
+                {
+                    tile.UpdatePiece(piece_type.B_pawn);
+                    
+                    IsInCheck();
+
+                    tile.RemovePiece();
+
+                    if(in_check)
+                    {
+                        return;
+                    }
+                }
+
+                if(client_player == "W")
+                {
+                    tile.UpdatePiece(piece_type.B_pawn);
+                    
+                    IsInCheck();
+
+                    tile.RemovePiece();
+
+                    if(in_check)
+                    {
+                        console.log("CHECKED")
+                        return;
+                    }
+                }
+            }
+        }
+
         tile.UpdatePiece(GetPiece(piece_type.move_square));
 
         move_pieces.push(tile);

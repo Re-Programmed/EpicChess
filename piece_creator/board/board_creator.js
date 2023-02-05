@@ -8,7 +8,7 @@ window.addEventListener('load', function () {
     GenerateBoardOptions();
 })
 
-var default_board = {id: "", name: "New Board"}
+var default_board = {id: "", name: "New Board", bl: tile_light_color, bd: tile_dark_color}
 
 function AddBoard()
 {
@@ -17,9 +17,24 @@ function AddBoard()
 
     default_board.id = d_now;
 
-    boards.push({id: d_now, name: "New Board"})
+    var b = []
+    var dark = false
+
+    for(var x = 0; x < 8; x++)
+    {
+        for(var y = 0; y < 8; y++)
+        {
+            b.push({t: dark ? 1 : 0});
+            dark = !dark;
+        }
+        dark = !dark;
+    }
+
+    boards.push({id: d_now, name: "New Board", bl: tile_light_color, bd: tile_dark_color})
 
     localStorage.setItem(local_storage_prefix + "boards", btoa(JSON.stringify(boards)));
+
+    default_board["b"] = b;
 
     api.setChessBoard(default_board).then(() => {window.location.reload()})
 }
@@ -29,6 +44,7 @@ function GenerateBoardOptions()
     boards.forEach(board => {
         const p = document.createElement("div");
         p.className = "menu_option"
+        p.style.display = "inline-block";
         p.innerHTML = "<center></center>"
         p.setAttribute("p_id", board.id);
 

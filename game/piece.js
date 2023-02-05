@@ -142,8 +142,8 @@ function GenerateDefaultPieces(path_prefix = "")
     pieces.push(new Piece(piece_type.passant_square, path_prefix +"../pieces/move_square.png", null, 'N'));
     pieces.push(new Piece(piece_type.null_piece, "", null, 'N'));
 
-    pieces.push(new Piece(piece_type.B_king, path_prefix +"../pieces/black_king.png", king_motions, 'B'));
-    pieces.push(new Piece(piece_type.W_king, path_prefix +"../pieces/white_king.png", king_motions, 'W'));
+    pieces.push(new King(piece_type.B_king, path_prefix +"../pieces/black_king.png", king_motions, 'B'));
+    pieces.push(new King(piece_type.W_king, path_prefix +"../pieces/white_king.png", king_motions, 'W'));
 
 }
 
@@ -164,7 +164,10 @@ function GetPiece(type)
 
 
 
-
+class King extends Piece
+{
+     
+}
 
 
 class PieceMotions
