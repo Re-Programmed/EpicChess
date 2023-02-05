@@ -11,3 +11,9 @@ body
 {
     background-color: var(--bg-color);
 }
+
+p
+{
+    color: #DDDDDD;
+    font-family: monospace;
+}

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Epic Chess - Customize A Piece</title>
+    <title>Epic Chess - Customize A Board</title>
     <link rel="stylesheet" href="../../../style.css">
     <link rel="stylesheet" href="../../../game/board_style.css">
     <link rel="stylesheet" href="../../creator_style.css">
@@ -22,7 +22,13 @@
         <input type="text" placeholder="Board Light" id="board_light">
 
         <button onclick="Save();">Save</button> 
-        
+        <br><br>
+        <input type="checkbox" title="Place Black" id="place_black" onchange="UpdateSelectorColor(this.checked ? 'B' : 'W')">
+        <p style="display: inline-block;">Place Black</p>
+        <div id="piece_selector">
+
+        </div>
+
     </div>
 </body>
 </html>

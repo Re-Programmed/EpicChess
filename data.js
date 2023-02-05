@@ -39,9 +39,35 @@ class API
 
         return res;
     }
+
+    async getValidPieces()
+    {
+        var res = await fetch(this.url + "validity_pieces")
+        
+        var data = await res.json();
+        
+        return JSON.parse(atob(data.data));
+    }
 }
 
 function B64ToImage(b64)
 {
     return "data:image/png;base64," + b64;
+}
+
+function EncodeImageFileAsURLElement(element, done) {
+    var file = element.files[0];
+    var reader = new FileReader();
+    reader.onloadend = function() {
+        done(this.result);
+    }
+    reader.readAsDataURL(file);
+}
+
+function EncodeImageFileAsURL(file, done) {
+    var reader = new FileReader();
+    reader.onloadend = function() {
+        done(this.result);
+    }
+    reader.readAsDataURL(file);
 }

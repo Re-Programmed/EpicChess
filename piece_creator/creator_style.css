@@ -50,3 +50,31 @@ h1, h3{
 div{
     image-rendering: pixelated;
 }
+
+.piece_div, .selected_piece
+{
+    background-color: #4b9e4b;
+    border: 4px solid #367636;
+    margin: 15px;
+    width: 164px;
+    height: 164px;
+    display: inline-block;
+    transition-duration: 0.5s;
+}
+
+.selected_piece
+{
+    background-color: #f54444;
+    border: 4px solid #bb3232;
+}
+
+#piece_selector::-webkit-scrollbar {
+    display: none;
+  }
+  
+  #piece_selector {
+    height: 40em;
+    overflow: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }

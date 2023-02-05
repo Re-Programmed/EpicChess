@@ -200,7 +200,7 @@ function SelectTile(tile_el)
 
 function ChangeTexture(element)
 {
-    encodeImageFileAsURL(element, function (result) {
+    EncodeImageFileAsURLElement(element, function (result) {
         current_board.img = result.replace("data:image/png;base64,", "");
 
         document.getElementsByClassName("piece")[0].setAttribute("style", "background-image: url(\"" + result + "\"); width: calc(var(--tile-size) * 2); height: calc(var(--tile-size) * 2); background-size: contain; background-repeat: none; width: calc(var(--tile-size) * 2); height: calc(var(--tile-size) * 2); background-size: contain; background-repeat: none;");
@@ -232,6 +232,8 @@ function Save()
     })
 }
 
+
+
 function RemoveSpot(tile, arr)
 {
     var i = 0;
@@ -244,11 +246,3 @@ function RemoveSpot(tile, arr)
     })
 }
 
-function encodeImageFileAsURL(element, done) {
-    var file = element.files[0];
-    var reader = new FileReader();
-    reader.onloadend = function() {
-        done(this.result);
-    }
-    reader.readAsDataURL(file);
-}

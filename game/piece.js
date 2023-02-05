@@ -53,11 +53,8 @@ class Piece
     }
 }
 
-function FetchCustomPiece(piece, gen_locations = false)
+function LoadCustomPieceFromData(piece, piece_data, gen_locations = false)
 {
-    api.getChessBoard("piece_" + piece.id)
-    .then(piece_data => {
-        console.log(piece_data);
         const pt_w = parseInt(piece_data.id + "1");
         const pt_b = parseInt(piece_data.id + "2");
 
@@ -89,7 +86,7 @@ function FetchCustomPiece(piece, gen_locations = false)
         const inv_motions = new PieceMotions(inv_point_motions, inv_point_takes);
 
         pieces.push(new Piece(pt_b, B64ToImage(piece_data.img), inv_motions, 'B'));
-        pieces.push(new Piece(pt_w, B64ToImage(piece_data.img), motions, 'W'));
+        pieces.push(new Piece(pt_w, B64ToImage(piece_data.img_w), motions, 'W'));
 
         if(gen_locations)
         {
@@ -97,6 +94,13 @@ function FetchCustomPiece(piece, gen_locations = false)
                 GetTileByXY(pos.x, pos.y).UpdatePiece(pos.c == 'W' ? GetPiece(pt_w) : GetPiece(pt_b));
             });
         }
+}
+
+function FetchCustomPiece(piece, gen_locations = false)
+{
+    api.getChessBoard("piece_" + piece.id)
+    .then(piece_data => {
+        LoadCustomPieceFromData(piece, piece_data, gen_locations);
     })
 }
 
