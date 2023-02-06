@@ -110,7 +110,6 @@ function GenerateTile(dark, y, x, display_tile = false)
 {
     var tile = document.createElement("div");
     tile.className = dark ? elements.dark_square : elements.light_square;
-    tile.classList.add(display_tile ? "display_tile" : elements.tile);
 
     if(client_player == 'W')
     {
@@ -119,7 +118,10 @@ function GenerateTile(dark, y, x, display_tile = false)
         document.getElementById(elements.board).prepend(tile);
     }
     
-    return new Tile(dark, tile, y, x);
+    var t = new Tile(dark, tile, y, x, dark ? 1 : 0);
+    tile.classList.add(display_tile ? "display_tile" : elements.tile);
+
+    return t;
 }
 
 function EditMovementPattern()
@@ -202,6 +204,15 @@ function ChangeTexture(element)
 {
     EncodeImageFileAsURLElement(element, function (result) {
         current_board.img = result.replace("data:image/png;base64,", "");
+
+        document.getElementsByClassName("piece")[0].setAttribute("style", "background-image: url(\"" + result + "\"); width: calc(var(--tile-size) * 2); height: calc(var(--tile-size) * 2); background-size: contain; background-repeat: none; width: calc(var(--tile-size) * 2); height: calc(var(--tile-size) * 2); background-size: contain; background-repeat: none;");
+    })
+}
+
+function ChangeTextureWhite(element)
+{
+    EncodeImageFileAsURLElement(element, function (result) {
+        current_board.img_w = result.replace("data:image/png;base64,", "");
 
         document.getElementsByClassName("piece")[0].setAttribute("style", "background-image: url(\"" + result + "\"); width: calc(var(--tile-size) * 2); height: calc(var(--tile-size) * 2); background-size: contain; background-repeat: none; width: calc(var(--tile-size) * 2); height: calc(var(--tile-size) * 2); background-size: contain; background-repeat: none;");
     })
